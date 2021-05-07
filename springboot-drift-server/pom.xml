@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.coder.lee</groupId>
+        <artifactId>springboot-drift</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.coder.lee.drift.server</groupId>
+    <artifactId>springboot-drift-server</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>springboot-drift-server</name>
+    <description>Demo project for Spring Boot</description>
+    <packaging>jar</packaging>
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+    <dependencies>
+
+        <dependency>
+            <groupId>com.facebook.drift</groupId>
+            <artifactId>drift-transport-netty</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.thrift</groupId>
+            <artifactId>libthrift</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.facebook.drift</groupId>
+            <artifactId>drift-server</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <!-- 引入drift maven插件用来生成 /src/main/resources/service.thrift 文件 -->
+            <plugin>
+                <groupId>com.facebook.drift</groupId>
+                <artifactId>drift-maven-plugin</artifactId>
+                <version>${drift.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate-thrift-idl</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <outputFile>${project.basedir}/src/main/resources/service.thrift</outputFile>
+                    <classes>
+                        <class>com.coder.lee.drift.server.service.DriftAsyncScribe</class>
+                        <class>com.coder.lee.drift.server.service.DriftScribe</class>
+                    </classes>
+                    <recursive>true</recursive>
+                    <namespaces>
+                        <java>com.coder.lee.drift.server</java>
+                        <py>com.coder.lee.drift.server</py>
+                    </namespaces>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>
